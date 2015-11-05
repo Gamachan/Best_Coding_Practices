@@ -1,0 +1,23 @@
+Check all properties of an object are not null or empty
+Resource URL: http://stackoverflow.com/questions/22683040/how-to-check-all-properties-of-an-object-whether-null-or-empty
+
+bool IsAnyNullOrEmpty(object myObject)
+{
+    foreach(PropertyInfo pi in myObject.GetType().GetProperties())
+    {
+        string value = (string)pi.GetValue(myObject);
+        if(String.IsNullOrEmpty(value))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+The same but using LinQ:
+
+static bool IsAnyNullOrEmpty(object myObject)
+{
+    return myObject.GetType().GetProperties().Select(pi => (string) pi.GetValue(myObject, null)).Any(String.IsNullOrEmpty);
+}
