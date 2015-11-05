@@ -1,0 +1,34 @@
+Checking constructor parameter for null before calling base
+Resource URL: http://stackoverflow.com/questions/4803396/checking-constructor-parameter-for-null-before-calling-base
+
+public TheInheritor(TheArgument theArgument)
+    : base(ConvertToId(theArgument))
+{
+}
+
+private static int ConvertToId(TheArgument theArgument)
+{
+    if (theArgument == null)
+    {
+        throw new ArgumentNullException("theArgument");
+    }
+    return theArgument.Id;
+}
+
+More general approach:
+public static class Preconditions
+{
+    public static T CheckNotNull<T>(T value) where T : class
+    {
+        if (value == null)
+        {
+            throw new ArgumentNullException();
+        }
+        return value;
+    }
+}
+
+public TheInheritor(TheArgument theArgument)
+    : base(Preconditions.CheckNotNull(theArgument).Id)
+{
+}
